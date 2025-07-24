@@ -24,6 +24,8 @@ export default function Contato() {
     mensagem: "",
   });
 
+  const apiUrl = import.meta.env.VITE_API_URL;
+
   const t = {
     pt: {
       title: "Entre em Contato",
@@ -71,7 +73,7 @@ export default function Contato() {
       whatsapp: "WhatsApp",
       github: "GitHub",
       emailLabel: "Correo",
-      success: "¡Mensaje enviado con éxito!",
+      success: "¡Mensaje enviado com éxito!",
       error: "Error al enviar el mensaje. Inténtalo de nuevo.",
       recaptcha: "Por favor, confirma el reCAPTCHA.",
       invalidPhone: "Número de teléfono inválido para Portugal.",
@@ -81,7 +83,10 @@ export default function Contato() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const telefoneValido = /^(\+351)?\s?9\d{2}\s?\d{3}\s?\d{3}$/.test(formData.contato.replace(/\s/g, ""));
+    const telefoneValido = /^(\+351)?9\d{8}$/.test(
+      formData.contato.replace(/\s/g, "")
+    );
+
     if (!telefoneValido) {
       toast.error(t.invalidPhone);
       return;
@@ -96,7 +101,7 @@ export default function Contato() {
     setStatus("enviando");
 
     try {
-      const response = await fetch("https://backend-portfolio-vn9b.onrender.com/api/enviar-email", {
+      const response = await fetch(`${apiUrl}/api/enviar-email`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -151,32 +156,27 @@ export default function Contato() {
 
         <div className="grid md:grid-cols-5 gap-10">
           <div className="space-y-4 md:col-span-2">
-            {[
-              {
-                href: "https://www.linkedin.com/in/williamcavalcanticruz/",
-                label: t.linkedin,
-                icon: <FaLinkedin />,
-                color: "bg-blue-600 hover:bg-blue-700",
-              },
-              {
-                href: "https://wa.me/351910850273",
-                label: t.whatsapp,
-                icon: <FaWhatsapp />,
-                color: "bg-green-500 hover:bg-green-600",
-              },
-              {
-                href: "mailto:contato@williamcavalcanti.com",
-                label: t.emailLabel,
-                icon: <FaEnvelope />,
-                color: "bg-blue-500 hover:bg-blue-600",
-              },
-              {
-                href: "https://github.com/williamcruz12",
-                label: t.github,
-                icon: <FaGithub />,
-                color: "bg-zinc-800 hover:bg-zinc-700",
-              },
-            ].map((item, index) => (
+            {[{
+              href: "https://www.linkedin.com/in/williamcavalcanticruz/",
+              label: t.linkedin,
+              icon: <FaLinkedin />,
+              color: "bg-blue-600 hover:bg-blue-700",
+            }, {
+              href: "https://wa.me/351910850273",
+              label: t.whatsapp,
+              icon: <FaWhatsapp />,
+              color: "bg-green-500 hover:bg-green-600",
+            }, {
+              href: "mailto:contato@williamcavalcanti.com",
+              label: t.emailLabel,
+              icon: <FaEnvelope />,
+              color: "bg-blue-500 hover:bg-blue-600",
+            }, {
+              href: "https://github.com/williamcruz12",
+              label: t.github,
+              icon: <FaGithub />,
+              color: "bg-zinc-800 hover:bg-zinc-700",
+            }].map((item, index) => (
               <motion.a
                 key={index}
                 href={item.href}
